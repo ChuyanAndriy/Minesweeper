@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public struct Cell
+public struct Cell 
 {
-    public enum Type
+    public enum Type 
     {
         Invalid,
         Empty,

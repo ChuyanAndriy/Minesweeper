@@ -2,27 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Game : MonoBehaviour
+public class Game : MonoBehaviour 
 {
-    public int Width { get; set; } = 16;
-    public int Height { get; set; } = 16;
-    public int NumberOfMines { get; set; } = 32;
+    public int width { get; set; } = Settings.width;
+    public int height { get; set; } = Settings.height;
+    public int numberOfMines { get; set; } = Settings.mineCounter;
 
     private GameBoard _gameBoard;
     private Cell[,] _state;
-    private bool _gameOver = false;
+    private bool _isGameOver = false;
+    private bool _isActionFirst = true;
 
-    private void OnValidate()
+    private void OnValidate() 
     {
-        NumberOfMines = Mathf.Clamp(NumberOfMines, 0, Width * Height);
+        numberOfMines = Mathf.Clamp(numberOfMines, 0, width * height);
     }
 
-    private void Awake()
+    private void Awake() 
     {
         _gameBoard = GetComponentInChildren<GameBoard>();
     }
 
-    private void Start()
+    private void Start() 
     {
         NewGame();
 
@@ -30,22 +31,22 @@ public class Game : MonoBehaviour
         GenerateMines();
         GenerateNumbers();
 
-        Camera.main.transform.position = new Vector3(Width / 2.0f, Height / 2.0f, -10.0f);
-        Camera.main.orthographicSize = Height / 2.0f;
+        Camera.main.transform.position = new Vector3(width / 2.0f, height / 2.0f, -10.0f);
+        Camera.main.orthographicSize = height / 2.0f;
         _gameBoard.Draw(_state);
     }
 
-    private void NewGame()
+    private void NewGame() 
     {
-        _state = new Cell[Width, Height];
-        _gameOver = false;
+        _state = new Cell[width, height];
+        _isGameOver = false;
     }
 
-    private void GenerateCells()
+    private void GenerateCells() 
     {
-        for (int x = 0; x < Width; x++)
+        for (int x = 0; x < width; x++) 
         {
-            for (int y = 0; y < Height; y++)
+            for (int y = 0; y < height; y++) 
             {
                 Cell cell = new Cell();
                 cell.Position = new Vector3Int(x, y, 0);
@@ -55,14 +56,15 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void GenerateMines()
+    private void GenerateMines() 
     {
-        for (int i = 0; i < NumberOfMines; i++)
+        for (int i = 0; i < numberOfMines; i++) 
         {
-            int x = Random.Range(0, Width);
-            int y = Random.Range(0, Height);
+            int x = Random.Range(0, width);
+            int y = Random.Range(0, height);
 
-            if (_state[x, y].type == Cell.Type.Mine) {
+            if (_state[x, y].type == Cell.Type.Mine) 
+            {
                 i--;
                 continue;
             }
@@ -71,39 +73,42 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void GenerateNumbers()
+    private void GenerateNumbers() 
     {
-        for (int x = 0; x < Width; x++)
+        for (int x = 0; x < width; x++) 
         {
-            for (int y = 0; y < Height; y++)
+            for (int y = 0; y < height; y++) 
             {
-                if (_state[x, y].type == Cell.Type.Mine)
+                if (_state[x, y].type == Cell.Type.Mine) 
                 {
                     continue;
                 }
 
                 _state[x, y].Number = CountMines(x: x, y: y);
 
-                if (_state[x, y].Number > 0) {
+                if (_state[x, y].Number > 0) 
+                {
                     _state[x, y].type = Cell.Type.Number;
                 }
             }
         }
     }
 
-    private int CountMines(int x, int y)
+    private int CountMines(int x, int y) 
     {
         int minesCounter = 0;
 
-        for (int i = -1; i <= 1; i++)
+        for (int i = -1; i <= 1; i++) 
         {
-            for (int j = -1; j <= 1; j++)
+            for (int j = -1; j <= 1; j++) 
             {
-                if (i == 0 && j == 0) {
+                if (i == 0 && j == 0) 
+                {
                     continue;
                 }
 
-                if (GetCell(x: x + i, y: y + j).type == Cell.Type.Mine) {
+                if (GetCell(x: x + i, y: y + j).type == Cell.Type.Mine) 
+                {
                     minesCounter++;
                 }
             }
@@ -112,19 +117,21 @@ public class Game : MonoBehaviour
         return minesCounter;
     }
 
-    private int CountFlags(int x, int y)
+    private int CountFlags(int x, int y) 
     {
         int flagsCounter = 0;
 
-        for (int i = -1; i <= 1; i++)
+        for (int i = -1; i <= 1; i++) 
         {
-            for (int j = -1; j <= 1; j++)
+            for (int j = -1; j <= 1; j++) 
             {
-                if (i == 0 && j == 0) {
+                if (i == 0 && j == 0) 
+                {
                     continue;
                 }
 
-                if (GetCell(x: x + i, y: y + j).IsFlagged) {
+                if (GetCell(x: x + i, y: y + j).IsFlagged) 
+                {
                     flagsCounter++;
                 }
             }
@@ -133,38 +140,72 @@ public class Game : MonoBehaviour
         return flagsCounter;
     }
 
-    private void Update()
+    private void Update() 
     {
-        if (Input.GetKeyDown(KeyCode.R)) {
+        if (Input.GetKeyDown(KeyCode.R)) 
+        {
             Start();
-        }
-        else if (!_gameOver)
+
+            _isActionFirst = true;
+        } 
+        else if (!_isGameOver && !PauseMenu.isGamePaused) 
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int cellPosition = _gameBoard.Map.WorldToCell(worldPosition);
 
-            if (Input.GetMouseButtonDown(1)) {
+            if (Input.GetMouseButtonDown(1)) 
+            {
                 Flag(x: cellPosition.x, y: cellPosition.y);
-            } else if (Input.GetMouseButtonDown(0)) {
+
+                _gameBoard.Draw(_state);
+            } 
+            else if (Input.GetMouseButtonDown(0)) 
+            {
+                if (_isActionFirst)
+                {
+                    _isActionFirst = false;
+
+                    Timer.instance.BeginTimer();
+                }
+
                 Open(x: cellPosition.x, y: cellPosition.y);
-            } else if (Input.GetMouseButton(0) && Input.GetMouseButton(1)) {
+
+                _gameBoard.Draw(_state);
+            } 
+            else if (Input.GetMouseButton(0) && Input.GetMouseButton(1)) 
+            {
+                if (_isActionFirst)
+                {
+                    _isActionFirst = false;
+
+                    Timer.instance.BeginTimer();
+                }
+
                 OpenArea(x: cellPosition.x, y: cellPosition.y);
+
+                _gameBoard.Draw(_state);
             }
+        }
+        else if (!PauseMenu.isGamePaused)
+        {
+            Timer.instance.EndTimer();
         }
     }
 
-    private void OpenArea(int x, int y)
+    private void OpenArea(int x, int y) 
     {
         Cell cell = GetCell(x: x, y: y);
 
-        if (cell.type == Cell.Type.Invalid || !cell.IsOpend) {
+        if (cell.type == Cell.Type.Invalid || !cell.IsOpend) 
+        {
             return;
         }
 
-        if (CountFlags(x: x, y: y) == cell.Number) {
-            for (int i = -1; i <= 1; i++)
+        if (CountFlags(x: x, y: y) == cell.Number) 
+        {
+            for (int i = -1; i <= 1; i++) 
             {
-                for (int j = -1; j <= 1; j++)
+                for (int j = -1; j <= 1; j++) 
                 {
                     Open(x: x + i, y: y + j);
                 }
@@ -172,28 +213,29 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void Flag(int x, int y)
+    private void Flag(int x, int y) 
     {
         Cell cell = GetCell(x: x, y: y);
 
-        if (cell.type == Cell.Type.Invalid || cell.IsOpend) {
+        if (cell.type == Cell.Type.Invalid || cell.IsOpend) 
+        {
             return;
         }
 
         cell.IsFlagged = !cell.IsFlagged;
         _state[x, y] = cell;
-        _gameBoard.Draw(_state);
     }
 
-    private void Open(int x, int y)
+    private void Open(int x, int y) 
     {
         Cell cell = GetCell(x: x, y: y);
 
-        if (cell.type == Cell.Type.Invalid || cell.IsFlagged || cell.IsOpend) {
+        if (cell.type == Cell.Type.Invalid || cell.IsFlagged || cell.IsOpend) 
+        {
             return;
         }
 
-        switch (cell.type)
+        switch (cell.type) 
         {
             case Cell.Type.Mine:
                 Explode(cell);
@@ -209,27 +251,27 @@ public class Game : MonoBehaviour
                 CheckWin();
                 break;
         }
-
-        _gameBoard.Draw(_state);
     }
 
-    private void OpenNeighbours(Cell cell)
+    private void OpenNeighbours(Cell cell) 
     {
-        if (cell.IsOpend) {
+        if (cell.IsOpend) 
+        {
             return;
         }
-        if (cell.type == Cell.Type.Mine || cell.type == Cell.Type.Invalid) {
+        if (cell.type == Cell.Type.Mine || cell.type == Cell.Type.Invalid) 
+        {
             return;
         }
 
         cell.IsOpend = true;
         _state[cell.Position.x, cell.Position.y] = cell;
 
-        if (cell.type == Cell.Type.Empty)
+        if (cell.type == Cell.Type.Empty) 
         {
-            for (int i = -1; i <= 1; i++)
+            for (int i = -1; i <= 1; i++) 
             {
-                for (int j = -1; j <= 1; j++)
+                for (int j = -1; j <= 1; j++) 
                 {
                     OpenNeighbours(GetCell(x: cell.Position.x + i, y: cell.Position.y + j));
                 }
@@ -237,22 +279,22 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void Explode(Cell cell)
+    private void Explode(Cell cell) 
     {
         Debug.Log("Game Over!");
-        _gameOver = true;
+        _isGameOver = true;
 
         cell.IsOpend = true;
         cell.IsExploded = true;
         _state[cell.Position.x, cell.Position.y] = cell;
 
-        for (int x = 0; x < Width; x++)
+        for (int x = 0; x < width; x++) 
         {
-            for (int y = 0; y < Height; y++)
+            for (int y = 0; y < height; y++) 
             {
                 cell = _state[x, y];
 
-                if (cell.type == Cell.Type.Mine)
+                if (cell.type == Cell.Type.Mine) 
                 {
                     cell.IsOpend = true;
                     _state[x, y] = cell;
@@ -261,30 +303,32 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void CheckWin()
+    private void CheckWin() 
     {
-        for (int x = 0; x < Width; x++)
+        for (int x = 0; x < width; x++) 
         {
-            for (int y = 0; y < Height; y++)
+            for (int y = 0; y < height; y++) 
             {
                 Cell cell = _state[x, y];
 
-                if (cell.type != Cell.Type.Mine && !cell.IsOpend) {
+                if (cell.type != Cell.Type.Mine && !cell.IsOpend) 
+                {
                     return;
                 }
             }
         }
 
         Debug.Log("Win!");
-        _gameOver = true;
+        _isGameOver = true;
 
-        for (int x = 0; x < Width; x++)
+        for (int x = 0; x < width; x++) 
         {
-            for (int y = 0; y < Height; y++)
+            for (int y = 0; y < height; y++) 
             {
                 Cell cell = _state[x, y];
 
-                if (cell.type == Cell.Type.Mine) {
+                if (cell.type == Cell.Type.Mine) 
+                {
                     cell.IsFlagged = true;
                     _state[x, y] = cell;
                 }
@@ -292,11 +336,14 @@ public class Game : MonoBehaviour
         }
     }
 
-    private Cell GetCell(int x, int y)
+    private Cell GetCell(int x, int y) 
     {
-        if (x >= 0 && x < Width && y >= 0 && y < Height) {
+        if (x >= 0 && x < width && y >= 0 && y < height) 
+        {
             return _state[x, y];
-        } else {
+        } 
+        else 
+        {
             return new Cell();
         }
     }

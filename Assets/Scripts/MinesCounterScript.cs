@@ -7,13 +7,13 @@ public class MinesCounterScript : MonoBehaviour
 
     public Text minesCounterText;
 
-    private void Awake()
-    {
-        instance = this;
-    }
-
     public void SetMinesCounterText(int minesCounter)
     {
         minesCounterText.text = "Mines: " + minesCounter.ToString();
+    }
+
+    private void Awake()
+    {
+        instance = this;
     }
 }

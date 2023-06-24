@@ -1,6 +1,6 @@
-public static class Settings 
+public static class Settings
 {
-    public static int width = 9;
-    public static int height = 9;
-    public static int mineCounter = 10;
+    public static int Width = 9;
+    public static int Height = 9;
+    public static int MinesCounter = 10;
 }

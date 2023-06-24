@@ -1,63 +1,74 @@
 using UnityEngine;
 
-public class GameController : MonoBehaviour 
+public class GameController : MonoBehaviour
 {
-    public int width { get; set; } = Settings.width;
-    public int height { get; set; } = Settings.height;
-    public int numberOfMines { get; set; } = Settings.mineCounter;
-
+    private int _width = Settings.Width;
+    private int _height = Settings.Height;
+    private int _minesCounter = Settings.MinesCounter;
     private Game _minesweeper = new Game();
     private GameBoard _gameBoard;
     private bool _isActionFirst = true;
 
-    private void OnValidate() {
-        numberOfMines = Mathf.Clamp(numberOfMines, 0, width * height);
+    private void OnValidate()
+    {
+        _minesCounter = Mathf.Clamp(_minesCounter, 0, _width * _height);
     }
 
-    private void Awake() {
+    private void Awake()
+    {
         _gameBoard = GetComponentInChildren<GameBoard>();
     }
 
-    private void Start() {
-        _minesweeper.ApplySettings(width: width, height: height, numberOfMines: numberOfMines);
+    private void Start()
+    {
+        _minesweeper.ApplySettings(width: _width, height: _height, numberOfMines: _minesCounter);
 
         _minesweeper.NewGame();
 
         GameOverMenu.instance.GameOverHide();
 
-        MinesCounterScript.instance.SetMinesCounterText(minesCounter: _minesweeper._numberOfMines - _minesweeper.CountFlags());
+        MinesCounterScript.instance.SetMinesCounterText(
+            minesCounter: _minesweeper.MinesCounter - _minesweeper.CountFlags()
+        );
 
-        Camera.main.transform.position = new Vector3(_minesweeper._width / 2.0f, _minesweeper._height / 2.0f, -10.0f);
-        Camera.main.orthographicSize = _minesweeper._height / 2.0f;
+        Camera.main.transform.position = new Vector3(
+            _minesweeper.Width / 2.0f,
+            _minesweeper.Height / 2.0f,
+            -10.0f
+        );
+        Camera.main.orthographicSize = _minesweeper.Height / 2.0f;
         _gameBoard.Draw(_minesweeper.State);
     }
 
-    private void Update()  
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R)) 
+        if (Input.GetKeyDown(KeyCode.R))
         {
             Start();
 
             _isActionFirst = true;
 
             Timer.instance.EndTimer();
-        } 
-        else if (!_minesweeper.IsGameOver && !PauseMenu.isGamePaused) 
+        }
+        else if (!_minesweeper.IsGameOver && !PauseMenu.IsGamePaused)
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int cellPosition = _gameBoard.Map.WorldToCell(worldPosition);
 
-            if (Input.GetMouseButtonDown(1)) 
+            if (Input.GetMouseButtonDown(1))
             {
                 _minesweeper.Flag(x: cellPosition.x, y: cellPosition.y);
 
-                MinesCounterScript.instance.SetMinesCounterText(minesCounter: _minesweeper._numberOfMines - _minesweeper.CountFlags());
+                MinesCounterScript.instance.SetMinesCounterText(
+                    minesCounter: _minesweeper.MinesCounter - _minesweeper.CountFlags()
+                );
 
                 _gameBoard.Draw(_minesweeper.State);
-            } 
-            else if (Input.GetMouseButtonDown(0)) 
+            }
+            else if (Input.GetMouseButtonDown(0))
             {
-                if (_isActionFirst) {
+                if (_isActionFirst)
+                {
                     _isActionFirst = false;
 
                     Timer.instance.BeginTimer();
@@ -66,10 +77,10 @@ public class GameController : MonoBehaviour
                 _minesweeper.Open(x: cellPosition.x, y: cellPosition.y);
 
                 _gameBoard.Draw(_minesweeper.State);
-            } 
-            else if (Input.GetMouseButton(0) && Input.GetMouseButton(1)) 
+            }
+            else if (Input.GetMouseButton(0) && Input.GetMouseButton(1))
             {
-                if (_isActionFirst) 
+                if (_isActionFirst)
                 {
                     _isActionFirst = false;
 
@@ -80,8 +91,8 @@ public class GameController : MonoBehaviour
 
                 _gameBoard.Draw(_minesweeper.State);
             }
-        } 
-        else if (!PauseMenu.isGamePaused) 
+        }
+        else if (!PauseMenu.IsGamePaused)
         {
             Timer.instance.EndTimer();
         }

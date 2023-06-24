@@ -15,17 +15,6 @@ public class Timer : MonoBehaviour
 
     private float _elapsedTime;
 
-    private void Awake()
-    {
-        instance = this;
-    }
-
-    private void Start()
-    {
-        timeCounter.text = "Time: 00:00.00";
-        _isTimerGoing = false;
-    }
-
     public void BeginTimer()
     {
         _isTimerGoing = true;
@@ -50,5 +39,16 @@ public class Timer : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
+    private void Start()
+    {
+        timeCounter.text = "Time: 00:00.00";
+        _isTimerGoing = false;
     }
 }

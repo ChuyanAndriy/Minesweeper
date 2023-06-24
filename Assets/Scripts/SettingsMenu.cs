@@ -1,30 +1,30 @@
 using UnityEngine;
 
-public class SettingsMenu : MonoBehaviour 
+public class SettingsMenu : MonoBehaviour
 {
-    public void SetDifficulty(int sizeIndex) 
+    public void SetDifficulty(int sizeIndex)
     {
-        switch (sizeIndex) 
+        switch (sizeIndex)
         {
-            case 0: 
-                Settings.mineCounter = 10;
-                Settings.width = 9;
-                Settings.height = 9;
+            case 0:
+                Settings.MinesCounter = 10;
+                Settings.Width = 9;
+                Settings.Height = 9;
                 break;
             case 1:
-                Settings.mineCounter = 40;
-                Settings.width = 16;
-                Settings.height = 16;
+                Settings.MinesCounter = 40;
+                Settings.Width = 16;
+                Settings.Height = 16;
                 break;
             case 2:
-                Settings.mineCounter = 99;
-                Settings.width = 16;
-                Settings.height = 30;
+                Settings.MinesCounter = 99;
+                Settings.Width = 16;
+                Settings.Height = 30;
                 break;
             default:
-                Settings.mineCounter = 10;
-                Settings.width = 9;
-                Settings.height = 9;
+                Settings.MinesCounter = 10;
+                Settings.Width = 9;
+                Settings.Height = 9;
                 break;
         }
     }

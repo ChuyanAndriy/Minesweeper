@@ -20,7 +20,7 @@ public class GameOverMenu : MonoBehaviour
         {
             gameResult.text = "YOU LOSE!";
         }
-        
+
         gameOverMenuUI.SetActive(true);
     }
 

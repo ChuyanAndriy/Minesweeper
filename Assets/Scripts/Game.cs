@@ -1,94 +1,83 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Game : MonoBehaviour 
+public class Game
 {
-    public int width { get; set; } = Settings.width;
-    public int height { get; set; } = Settings.height;
-    public int numberOfMines { get; set; } = Settings.mineCounter;
+    public int _width { get; private set; } = 9;
+    public int _height { get; private set; } = 9;
+    public int _numberOfMines { get; private set; } = 10;
 
-    private GameBoard _gameBoard;
-    private Cell[,] _state;
-    private bool _isGameOver = false;
-    private bool _isActionFirst = true;
+    public Cell[,] State { get; private set; }
+    public bool IsGameOver { get; private set; } = false;
+    public bool IsGameWin { get; private set; } = false;
 
-    private void OnValidate() 
-    {
-        numberOfMines = Mathf.Clamp(numberOfMines, 0, width * height);
+    public void ApplySettings(int width, int height, int numberOfMines) {
+        _width = width;
+        _height = height;
+        _numberOfMines = numberOfMines;
     }
 
-    private void Awake() 
+    public void NewGame() 
     {
-        _gameBoard = GetComponentInChildren<GameBoard>();
-    }
-
-    private void Start() 
-    {
-        NewGame();
+        State = new Cell[_width, _height];
 
         GenerateCells();
         GenerateMines();
         GenerateNumbers();
 
-        Camera.main.transform.position = new Vector3(width / 2.0f, height / 2.0f, -10.0f);
-        Camera.main.orthographicSize = height / 2.0f;
-        _gameBoard.Draw(_state);
-    }
-
-    private void NewGame() 
-    {
-        _state = new Cell[width, height];
-        _isGameOver = false;
+        IsGameOver = false;
+        IsGameWin = false;
     }
 
     private void GenerateCells() 
     {
-        for (int x = 0; x < width; x++) 
+        for (int x = 0; x < _width; x++) 
         {
-            for (int y = 0; y < height; y++) 
+            for (int y = 0; y < _height; y++) 
             {
                 Cell cell = new Cell();
                 cell.Position = new Vector3Int(x, y, 0);
                 cell.type = Cell.Type.Empty;
-                _state[x, y] = cell;
+                State[x, y] = cell;
             }
         }
     }
 
     private void GenerateMines() 
     {
-        for (int i = 0; i < numberOfMines; i++) 
-        {
-            int x = Random.Range(0, width);
-            int y = Random.Range(0, height);
-
-            if (_state[x, y].type == Cell.Type.Mine) 
+        
+        if (_numberOfMines >= 0 && _numberOfMines <= _height * _width) {
+            for (int i = 0; i < _numberOfMines; i++) 
             {
-                i--;
-                continue;
+                int x = Random.Range(0, _width);
+                int y = Random.Range(0, _height);
+    
+                if (State[x, y].type == Cell.Type.Mine) 
+                {
+                    i--;
+                    continue;
+                }
+    
+                State[x, y].type = Cell.Type.Mine;
             }
-
-            _state[x, y].type = Cell.Type.Mine;
         }
     }
 
     private void GenerateNumbers() 
     {
-        for (int x = 0; x < width; x++) 
+        for (int x = 0; x < _width; x++) 
         {
-            for (int y = 0; y < height; y++) 
+            for (int y = 0; y < _height; y++) 
             {
-                if (_state[x, y].type == Cell.Type.Mine) 
+                if (State[x, y].type == Cell.Type.Mine) 
                 {
                     continue;
                 }
 
-                _state[x, y].Number = CountMines(x: x, y: y);
+                State[x, y].Number = CountMines(x: x, y: y);
 
-                if (_state[x, y].Number > 0) 
+                if (State[x, y].Number > 0) 
                 {
-                    _state[x, y].type = Cell.Type.Number;
+                    State[x, y].type = Cell.Type.Number;
                 }
             }
         }
@@ -117,7 +106,7 @@ public class Game : MonoBehaviour
         return minesCounter;
     }
 
-    private int CountFlags(int x, int y) 
+    private int CountFlagsInArea(int x, int y) 
     {
         int flagsCounter = 0;
 
@@ -140,59 +129,7 @@ public class Game : MonoBehaviour
         return flagsCounter;
     }
 
-    private void Update() 
-    {
-        if (Input.GetKeyDown(KeyCode.R)) 
-        {
-            Start();
-
-            _isActionFirst = true;
-        } 
-        else if (!_isGameOver && !PauseMenu.isGamePaused) 
-        {
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int cellPosition = _gameBoard.Map.WorldToCell(worldPosition);
-
-            if (Input.GetMouseButtonDown(1)) 
-            {
-                Flag(x: cellPosition.x, y: cellPosition.y);
-
-                _gameBoard.Draw(_state);
-            } 
-            else if (Input.GetMouseButtonDown(0)) 
-            {
-                if (_isActionFirst)
-                {
-                    _isActionFirst = false;
-
-                    Timer.instance.BeginTimer();
-                }
-
-                Open(x: cellPosition.x, y: cellPosition.y);
-
-                _gameBoard.Draw(_state);
-            } 
-            else if (Input.GetMouseButton(0) && Input.GetMouseButton(1)) 
-            {
-                if (_isActionFirst)
-                {
-                    _isActionFirst = false;
-
-                    Timer.instance.BeginTimer();
-                }
-
-                OpenArea(x: cellPosition.x, y: cellPosition.y);
-
-                _gameBoard.Draw(_state);
-            }
-        }
-        else if (!PauseMenu.isGamePaused)
-        {
-            Timer.instance.EndTimer();
-        }
-    }
-
-    private void OpenArea(int x, int y) 
+    public void OpenArea(int x, int y) 
     {
         Cell cell = GetCell(x: x, y: y);
 
@@ -201,7 +138,7 @@ public class Game : MonoBehaviour
             return;
         }
 
-        if (CountFlags(x: x, y: y) == cell.Number) 
+        if (CountFlagsInArea(x: x, y: y) == cell.Number) 
         {
             for (int i = -1; i <= 1; i++) 
             {
@@ -213,7 +150,7 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void Flag(int x, int y) 
+    public void Flag(int x, int y) 
     {
         Cell cell = GetCell(x: x, y: y);
 
@@ -223,10 +160,10 @@ public class Game : MonoBehaviour
         }
 
         cell.IsFlagged = !cell.IsFlagged;
-        _state[x, y] = cell;
+        State[x, y] = cell;
     }
 
-    private void Open(int x, int y) 
+    public void Open(int x, int y) 
     {
         Cell cell = GetCell(x: x, y: y);
 
@@ -247,7 +184,7 @@ public class Game : MonoBehaviour
 
             default:
                 cell.IsOpend = true;
-                _state[x, y] = cell;
+                State[x, y] = cell;
                 CheckWin();
                 break;
         }
@@ -265,7 +202,7 @@ public class Game : MonoBehaviour
         }
 
         cell.IsOpend = true;
-        _state[cell.Position.x, cell.Position.y] = cell;
+        State[cell.Position.x, cell.Position.y] = cell;
 
         if (cell.type == Cell.Type.Empty) 
         {
@@ -281,23 +218,22 @@ public class Game : MonoBehaviour
 
     private void Explode(Cell cell) 
     {
-        Debug.Log("Game Over!");
-        _isGameOver = true;
+        IsGameOver = true;
 
         cell.IsOpend = true;
         cell.IsExploded = true;
-        _state[cell.Position.x, cell.Position.y] = cell;
+        State[cell.Position.x, cell.Position.y] = cell;
 
-        for (int x = 0; x < width; x++) 
+        for (int x = 0; x < _width; x++) 
         {
-            for (int y = 0; y < height; y++) 
+            for (int y = 0; y < _height; y++) 
             {
-                cell = _state[x, y];
+                cell = State[x, y];
 
                 if (cell.type == Cell.Type.Mine) 
                 {
                     cell.IsOpend = true;
-                    _state[x, y] = cell;
+                    State[x, y] = cell;
                 }
             }
         }
@@ -305,11 +241,11 @@ public class Game : MonoBehaviour
 
     private void CheckWin() 
     {
-        for (int x = 0; x < width; x++) 
+        for (int x = 0; x < _width; x++) 
         {
-            for (int y = 0; y < height; y++) 
+            for (int y = 0; y < _height; y++) 
             {
-                Cell cell = _state[x, y];
+                Cell cell = State[x, y];
 
                 if (cell.type != Cell.Type.Mine && !cell.IsOpend) 
                 {
@@ -318,33 +254,52 @@ public class Game : MonoBehaviour
             }
         }
 
-        Debug.Log("Win!");
-        _isGameOver = true;
+        IsGameOver = true;
+        IsGameWin = true;
 
-        for (int x = 0; x < width; x++) 
+        for (int x = 0; x < _width; x++) 
         {
-            for (int y = 0; y < height; y++) 
+            for (int y = 0; y < _height; y++) 
             {
-                Cell cell = _state[x, y];
+                Cell cell = State[x, y];
 
                 if (cell.type == Cell.Type.Mine) 
                 {
                     cell.IsFlagged = true;
-                    _state[x, y] = cell;
+                    State[x, y] = cell;
                 }
             }
         }
     }
 
+    public int CountFlags()
+    {
+        int flagCounter = 0;
+
+        for (int x = 0; x < _width; x++)
+        {
+            for (int y = 0; y < _height; y++)
+            {
+                if (State[x, y].IsFlagged)
+                {
+                    flagCounter++;
+                }
+            }
+        }
+
+        return flagCounter;
+    }
+
     private Cell GetCell(int x, int y) 
     {
-        if (x >= 0 && x < width && y >= 0 && y < height) 
+        if (x >= 0 && x < _width && y >= 0 && y < _height) 
         {
-            return _state[x, y];
+            return State[x, y];
         } 
         else 
         {
             return new Cell();
         }
     }
+
 }

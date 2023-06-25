@@ -18,28 +18,28 @@ Minesweeper is a classic puzzle game where players uncover a minefield while avo
 - Enjoy the Game!.
 
 Main menu:
-<img src="Images/MainMenu.png" alt="MainMenu" width="2560" height="1440">
+<img src="Images/MainMenu.png" alt="MainMenu" width="100%" height="600">
 
 Settings menu:
-<img src="Images/SettingsMenu.png" alt="SettingsMenu" width="2560" height="1440">
+<img src="Images/SettingsMenu.png" alt="SettingsMenu" width="100%" height="600">
 
 Easy difficulty:
-<img src="Images/EasyDifficulty.png" alt="EasyDifficulty" width="2560" height="1440">
+<img src="Images/EasyDifficulty.png" alt="EasyDifficulty" width="100%" height="600">
 
 Medium difficulty:
-<img src="Images/MediumDifficulty.png" alt="MediumDifficulty" width="2560" height="1440">
+<img src="Images/MediumDifficulty.png" alt="MediumDifficulty" width="100%" height="600">
 
 Hard difficulty:
-<img src="Images/HardDifficulty.png" alt="HardDifficulty" width="2560" height="1440">
+<img src="Images/HardDifficulty.png" alt="HardDifficulty" width="100%" height="600">
 
 Pause menu:
-<img src="Images/PauseMenu.png" alt="PauseMenu" width="2560" height="1440">
+<img src="Images/PauseMenu.png" alt="PauseMenu" width="100%" height="600">
 
 Lose menu:
-<img src="Images/LoseMenu.png" alt="LoseMenu" width="2560" height="1440">
+<img src="Images/LoseMenu.png" alt="LoseMenu" width="100%" height="600">
 
 Win menu:
-<img src="Images/WinMenu.png" alt="WinMenu" width="2560" height="1440">
+<img src="Images/WinMenu.png" alt="WinMenu" width="100%" height="600">
 
 ### Files description
 

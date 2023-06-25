@@ -79,6 +79,7 @@ public class Game
 
             case Cell.Type.Empty:
                 OpenNeighbours(cell);
+                CheckWin();
                 break;
 
             default:

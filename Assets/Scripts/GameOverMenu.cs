@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public class GameOverMenu : MonoBehaviour
 {
-    public static GameOverMenu instance;
-
     public GameObject gameOverMenuUI;
 
     public Text gameResult;
@@ -39,10 +37,5 @@ public class GameOverMenu : MonoBehaviour
     {
         gameOverMenuUI.SetActive(false);
         SceneManager.LoadScene(1);
-    }
-
-    private void Awake()
-    {
-        instance = this;
     }
 }

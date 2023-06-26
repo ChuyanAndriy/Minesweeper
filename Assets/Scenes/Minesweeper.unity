@@ -971,6 +971,8 @@ GameObject:
   - component: {fileID: 820365059}
   - component: {fileID: 820365061}
   - component: {fileID: 820365062}
+  - component: {fileID: 820365063}
+  - component: {fileID: 820365064}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -1031,6 +1033,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeCounter: {fileID: 1818552142}
+--- !u!114 &820365063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820365058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11019ed8d859c1b4da71e06b4621ef21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minesCounterText: {fileID: 1438382188}
+--- !u!114 &820365064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820365058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28018dcd96388bf469376b193abe8251, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameOverMenuUI: {fileID: 297584458}
+  gameResult: {fileID: 922325892}
 --- !u!1 &890750089
 GameObject:
   m_ObjectHideFlags: 0
@@ -1345,7 +1374,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2091469415}
+      - m_Target: {fileID: 820365064}
         m_TargetAssemblyTypeName: GameOverMenu, Assembly-CSharp
         m_MethodName: ExitGame
         m_Mode: 1
@@ -1445,7 +1474,6 @@ GameObject:
   - component: {fileID: 1214724468}
   - component: {fileID: 1214724467}
   - component: {fileID: 1214724466}
-  - component: {fileID: 1214724469}
   m_Layer: 5
   m_Name: HUDCanvas
   m_TagString: Untagged
@@ -1537,19 +1565,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &1214724469
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1214724464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11019ed8d859c1b4da71e06b4621ef21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minesCounterText: {fileID: 1438382188}
 --- !u!1 &1288497544
 GameObject:
   m_ObjectHideFlags: 0
@@ -2121,7 +2136,6 @@ GameObject:
   - component: {fileID: 2091469418}
   - component: {fileID: 2091469417}
   - component: {fileID: 2091469416}
-  - component: {fileID: 2091469415}
   m_Layer: 5
   m_Name: GameOverCanvas
   m_TagString: Untagged
@@ -2129,20 +2143,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2091469415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2091469414}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28018dcd96388bf469376b193abe8251, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameOverMenuUI: {fileID: 297584458}
-  gameResult: {fileID: 922325892}
 --- !u!114 &2091469416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2311,7 +2311,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2091469415}
+      - m_Target: {fileID: 820365064}
         m_TargetAssemblyTypeName: GameOverMenu, Assembly-CSharp
         m_MethodName: RestartGame
         m_Mode: 1

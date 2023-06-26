@@ -7,6 +7,9 @@ public class GameController : MonoBehaviour
     private int _minesCounter = Settings.MinesCounter;
     private Game _minesweeper = new Game();
     private GameBoard _gameBoard;
+    private Timer _timer;
+    private MinesCounterScript _minesCounterScript;
+    private GameOverMenu _gameOverMenu;
     private bool _isActionFirst = true;
 
     private void OnValidate()
@@ -17,17 +20,20 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         _gameBoard = GetComponentInChildren<GameBoard>();
+        _timer = GetComponentInChildren<Timer>();
+        _minesCounterScript = GetComponentInChildren<MinesCounterScript>();
+        _gameOverMenu = GetComponentInChildren<GameOverMenu>();
     }
 
     private void Start()
     {
-        _minesweeper.ApplySettings(width: _width, height: _height, numberOfMines: _minesCounter);
+        _minesweeper.ApplySettings(width: _width, height: _height, minesCounter: _minesCounter);
 
         _minesweeper.NewGame();
 
-        GameOverMenu.instance.GameOverHide();
+        _gameOverMenu.GameOverHide();
 
-        MinesCounterScript.instance.SetMinesCounterText(
+        _minesCounterScript.SetMinesCounterText(
             minesCounter: _minesweeper.MinesCounter - _minesweeper.CountFlags()
         );
 
@@ -42,7 +48,7 @@ public class GameController : MonoBehaviour
 
             _isActionFirst = true;
 
-            Timer.instance.EndTimer();
+            _timer.EndTimer();
         }
         else if (!_minesweeper.IsGameOver && !PauseMenu.IsGamePaused)
         {
@@ -52,7 +58,7 @@ public class GameController : MonoBehaviour
             {
                 _minesweeper.Flag(x: cellPosition.x, y: cellPosition.y);
 
-                MinesCounterScript.instance.SetMinesCounterText(
+                _minesCounterScript.SetMinesCounterText(
                     minesCounter: _minesweeper.MinesCounter - _minesweeper.CountFlags()
                 );
 
@@ -64,7 +70,7 @@ public class GameController : MonoBehaviour
                 {
                     _isActionFirst = false;
 
-                    Timer.instance.BeginTimer();
+                    _timer.BeginTimer();
                 }
 
                 _minesweeper.Open(x: cellPosition.x, y: cellPosition.y);
@@ -77,7 +83,7 @@ public class GameController : MonoBehaviour
                 {
                     _isActionFirst = false;
 
-                    Timer.instance.BeginTimer();
+                    _timer.BeginTimer();
                 }
 
                 _minesweeper.OpenArea(x: cellPosition.x, y: cellPosition.y);
@@ -87,12 +93,12 @@ public class GameController : MonoBehaviour
         }
         else if (!PauseMenu.IsGamePaused)
         {
-            Timer.instance.EndTimer();
+            _timer.EndTimer();
         }
 
         if (_minesweeper.IsGameOver)
         {
-            GameOverMenu.instance.GameOverShow(isGameWin: _minesweeper.IsGameWin);
+            _gameOverMenu.GameOverShow(isGameWin: _minesweeper.IsGameWin);
         }
     }
 }

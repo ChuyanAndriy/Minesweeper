@@ -9,11 +9,14 @@ public class Game
     public bool IsGameOver { get; private set; } = false;
     public bool IsGameWin { get; private set; } = false;
 
-    public void ApplySettings(int width, int height, int numberOfMines)
+    public void ApplySettings(int width, int height, int minesCounter)
     {
-        Width = width;
-        Height = height;
-        MinesCounter = numberOfMines;
+        if (width > 0 && height > 0 && minesCounter >= 0 && minesCounter <= width * height)
+        {
+            Width = width;
+            Height = height;
+            MinesCounter = minesCounter;
+        }
     }
 
     public void NewGame()

@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
-    public static Timer instance;
-
     public Text timeCounter;
 
     private TimeSpan _timePlaying;
@@ -39,11 +37,6 @@ public class Timer : MonoBehaviour
 
             yield return null;
         }
-    }
-
-    private void Awake()
-    {
-        instance = this;
     }
 
     private void Start()

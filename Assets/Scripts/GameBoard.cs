@@ -24,15 +24,18 @@ public class GameBoard : MonoBehaviour
     [SerializeField]
     private List<Tile> _numberTile;
 
-    private void Awake()
+    public Vector3Int GetСoordinates()
     {
-        Map = GetComponent<Tilemap>();
+        return Map.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
     }
 
     public void Draw(Cell[,] state)
     {
         int width = state.GetLength(0);
         int height = state.GetLength(1);
+
+        Camera.main.transform.position = new Vector3(width / 2.0f, height / 2.0f, -10.0f);
+        Camera.main.orthographicSize = height / 2.0f;
 
         for (int x = 0; x < width; x++)
         {
@@ -58,6 +61,11 @@ public class GameBoard : MonoBehaviour
         {
             return _unclickedTile;
         }
+    }
+
+    private void Awake()
+    {
+        Map = GetComponent<Tilemap>();
     }
 
     private Tile GetOpendTile(Cell cell)

@@ -31,12 +31,6 @@ public class GameController : MonoBehaviour
             minesCounter: _minesweeper.MinesCounter - _minesweeper.CountFlags()
         );
 
-        Camera.main.transform.position = new Vector3(
-            _minesweeper.Width / 2.0f,
-            _minesweeper.Height / 2.0f,
-            -10.0f
-        );
-        Camera.main.orthographicSize = _minesweeper.Height / 2.0f;
         _gameBoard.Draw(_minesweeper.State);
     }
 
@@ -52,8 +46,7 @@ public class GameController : MonoBehaviour
         }
         else if (!_minesweeper.IsGameOver && !PauseMenu.IsGamePaused)
         {
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int cellPosition = _gameBoard.Map.WorldToCell(worldPosition);
+            Vector3Int cellPosition = _gameBoard.GetСoordinates();
 
             if (Input.GetMouseButtonDown(1))
             {

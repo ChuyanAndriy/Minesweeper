@@ -2,9 +2,13 @@ using UnityEngine;
 
 public class SettingsMenu : MonoBehaviour
 {
-    public void SetDifficulty(int sizeIndex)
+    /// <summary>
+    /// Method that changes game settings.
+    /// </summary>
+    /// <param name="index">Game difficulty index.</param>
+    public void SetDifficulty(int index)
     {
-        switch (sizeIndex)
+        switch (index)
         {
             case 0:
                 Settings.MinesCounter = 10;

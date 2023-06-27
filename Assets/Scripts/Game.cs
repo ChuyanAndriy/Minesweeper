@@ -1,14 +1,23 @@
 using UnityEngine;
 
+/// <summary>
+/// Class that represents the logic of the game.
+/// </summary>
 public class Game
 {
-    public int Width { get; private set; } = 9;
-    public int Height { get; private set; } = 9;
-    public int MinesCounter { get; private set; } = 10;
-    public Cell[,] State { get; private set; }
+    public int Width { get; private set; } = 9; // Width of the game field.
+    public int Height { get; private set; } = 9; // Height of the game field.
+    public int MinesCounter { get; private set; } = 10; // Number of mines.
+    public Cell[,] State { get; private set; } // Game field.
     public bool IsGameOver { get; private set; } = false;
     public bool IsGameWin { get; private set; } = false;
 
+    /// <summary>
+    /// Method method that sets preferences.
+    /// </summary>
+    /// <param name="width">Width of the game field.</param>
+    /// <param name="height">Height of the game field.</param>
+    /// <param name="minesCounter">Number of mines.</param>
     public void ApplySettings(int width, int height, int minesCounter)
     {
         if (width > 0 && height > 0 && minesCounter >= 0 && minesCounter <= width * height)
@@ -19,9 +28,12 @@ public class Game
         }
     }
 
+    /// <summary>
+    /// Method for setting a new game.
+    /// </summary>
     public void NewGame()
     {
-        State = new Cell[Width, Height];
+        State = new Cell[Width, Height]; // game field
 
         GenerateCells();
         GenerateMines();
@@ -31,6 +43,11 @@ public class Game
         IsGameWin = false;
     }
 
+    /// <summary>
+    /// Method that opens a cells around a cell with a number.
+    /// </summary>
+    /// <param name="x">Cell x coordinate.</param>
+    /// <param name="y">Cell y coordinate.</param>
     public void OpenArea(int x, int y)
     {
         Cell cell = GetCell(x: x, y: y);
@@ -52,6 +69,11 @@ public class Game
         }
     }
 
+    /// <summary>
+    /// Method that sets a flag on a cell.
+    /// </summary>
+    /// <param name="x">Cell x coordinate.</param>
+    /// <param name="y">Cell y coordinate.</param>
     public void Flag(int x, int y)
     {
         Cell cell = GetCell(x: x, y: y);
@@ -65,6 +87,12 @@ public class Game
         State[x, y] = cell;
     }
 
+
+    /// <summary>
+    /// Method that opens a cell.
+    /// </summary>
+    /// <param name="x">Cell x coordinate.</param>
+    /// <param name="y">Cell y coordinate.</param>
     public void Open(int x, int y)
     {
         Cell cell = GetCell(x: x, y: y);
@@ -93,6 +121,10 @@ public class Game
         }
     }
 
+    /// <summary>
+    /// Method that counts the number of flags on the game field.
+    /// </summary>
+    /// <returns>Number of flags on the game field.</returns>
     public int CountFlags()
     {
         int flagCounter = 0;
@@ -111,6 +143,9 @@ public class Game
         return flagCounter;
     }
 
+    /// <summary>
+    /// Method that generates cells
+    /// </summary>
     private void GenerateCells()
     {
         for (int x = 0; x < Width; x++)
@@ -125,6 +160,9 @@ public class Game
         }
     }
 
+    /// <summary>
+    /// Method that places mines.
+    /// </summary>
     private void GenerateMines()
     {
         if (MinesCounter >= 0 && MinesCounter <= Height * Width)
@@ -145,6 +183,9 @@ public class Game
         }
     }
 
+    /// <summary>
+    /// Method that places numbers.
+    /// </summary>
     private void GenerateNumbers()
     {
         for (int x = 0; x < Width; x++)
@@ -166,6 +207,12 @@ public class Game
         }
     }
 
+    /// <summary>
+    /// Method that counts mines around cell.
+    /// </summary>
+    /// <param name="x">Cell x coordinate.</param>
+    /// <param name="y">Cell y coordinate.</param>
+    /// <returns>Number of mines around cell.</returns>
     private int CountMines(int x, int y)
     {
         int minesCounter = 0;
@@ -189,6 +236,12 @@ public class Game
         return minesCounter;
     }
 
+    /// <summary>
+    /// Method that counts flags around cell.
+    /// </summary>
+    /// <param name="x">Cell x coordinate.</param>
+    /// <param name="y">Cell x coordinate.</param>
+    /// <returns>Number of flags around cell.</returns>
     private int CountFlagsInArea(int x, int y)
     {
         int flagsCounter = 0;
@@ -212,6 +265,10 @@ public class Game
         return flagsCounter;
     }
 
+    /// <summary>
+    /// Method that opens neighbours of a cell.
+    /// </summary>
+    /// <param name="cell">Ñell whose neighbors are open.</param>
     private void OpenNeighbours(Cell cell)
     {
         if (cell.IsOpend)
@@ -238,6 +295,10 @@ public class Game
         }
     }
 
+    /// <summary>
+    /// Methot that explodes cell.
+    /// </summary>
+    /// <param name="cell">Ñell that explodes.</param>
     private void Explode(Cell cell)
     {
         IsGameOver = true;
@@ -261,6 +322,9 @@ public class Game
         }
     }
 
+    /// <summary>
+    /// Method that checks the win status.
+    /// </summary>
     private void CheckWin()
     {
         for (int x = 0; x < Width; x++)
@@ -294,6 +358,12 @@ public class Game
         }
     }
 
+    /// <summary>
+    /// Method that returns a cell by coordinates.
+    /// </summary>
+    /// <param name="x">Cell x coordinate.</param>
+    /// <param name="y">Cell y coordinate.</param>
+    /// <returns>Cell.</returns>
     private Cell GetCell(int x, int y)
     {
         if (x >= 0 && x < Width && y >= 0 && y < Height)

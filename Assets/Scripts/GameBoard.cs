@@ -29,6 +29,26 @@ public class GameBoard : MonoBehaviour
         return Map.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
     }
 
+    /// <summary>
+    /// Method that keeps track of the player's actions.
+    /// </summary>
+    /// <returns>List of actions</returns>
+    public List<bool> GetPlayerActions()
+    {
+        List<bool> playerActions = new List<bool>(4) { false, false, false, false };
+
+        playerActions[0] = Input.GetMouseButtonDown(0);
+        playerActions[1] = Input.GetMouseButtonDown(1);
+        playerActions[2] = Input.GetMouseButton(0) && Input.GetMouseButton(1);
+        playerActions[3] = Input.GetKeyDown(KeyCode.R);
+
+        return playerActions;
+    }
+
+    /// <summary>
+    /// Method that draws the game field.
+    /// </summary>
+    /// <param name="state">Game field</param>
     public void Draw(Cell[,] state)
     {
         int width = state.GetLength(0);
@@ -47,6 +67,11 @@ public class GameBoard : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method that returns a tile for a cell.
+    /// </summary>
+    /// <param name="cell"></param>
+    /// <returns>Tile for a cell.</returns>
     public Tile GetTile(Cell cell)
     {
         if (cell.IsOpend)
@@ -68,6 +93,11 @@ public class GameBoard : MonoBehaviour
         Map = GetComponent<Tilemap>();
     }
 
+    /// <summary>
+    /// Method that returns a tile for an opend cell.
+    /// </summary>
+    /// <param name="cell"></param>
+    /// <returns>Tile for an opend cell.</returns>
     private Tile GetOpendTile(Cell cell)
     {
         switch (cell.type)
@@ -83,6 +113,11 @@ public class GameBoard : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method that returns a tile for an opend number cell.
+    /// </summary>
+    /// <param name="cell"></param>
+    /// <returns>Tile for an opend number cell.</returns>
     private Tile GetNumberTile(Cell cell)
     {
         return _numberTile[cell.Number - 1];

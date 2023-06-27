@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
@@ -42,7 +43,9 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        List<bool> playerActions = _gameBoard.GetPlayerActions();
+
+        if (playerActions[3])
         {
             Start();
 
@@ -54,7 +57,7 @@ public class GameController : MonoBehaviour
         {
             Vector3Int cellPosition = _gameBoard.GetСoordinates();
 
-            if (Input.GetMouseButtonDown(1))
+            if (playerActions[1])
             {
                 _minesweeper.Flag(x: cellPosition.x, y: cellPosition.y);
 
@@ -64,7 +67,7 @@ public class GameController : MonoBehaviour
 
                 _gameBoard.Draw(_minesweeper.State);
             }
-            else if (Input.GetMouseButtonDown(0))
+            else if (playerActions[0])
             {
                 if (_isActionFirst)
                 {
@@ -77,7 +80,7 @@ public class GameController : MonoBehaviour
 
                 _gameBoard.Draw(_minesweeper.State);
             }
-            else if (Input.GetMouseButton(0) && Input.GetMouseButton(1))
+            else if (playerActions[2])
             {
                 if (_isActionFirst)
                 {

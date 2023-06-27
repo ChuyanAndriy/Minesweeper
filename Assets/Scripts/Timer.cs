@@ -13,6 +13,9 @@ public class Timer : MonoBehaviour
 
     private float _elapsedTime;
 
+    /// <summary>
+    /// Method that starts the timer.
+    /// </summary>
     public void BeginTimer()
     {
         _isTimerGoing = true;
@@ -21,11 +24,18 @@ public class Timer : MonoBehaviour
         StartCoroutine(UpdateTimer());
     }
 
+    /// <summary>
+    /// Method that stops the timer.
+    /// </summary>
     public void EndTimer()
     {
         _isTimerGoing = false;
     }
 
+    /// <summary>
+    /// Method that counts the time and displays it.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator UpdateTimer()
     {
         while (_isTimerGoing)

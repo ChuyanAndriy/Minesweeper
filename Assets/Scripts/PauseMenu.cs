@@ -7,6 +7,9 @@ public class PauseMenu : MonoBehaviour
 
     public GameObject pauseMenuUI;
 
+    /// <summary>
+    /// Method that resumes the game.
+    /// </summary>
     public void Resume()
     {
         pauseMenuUI.SetActive(false);
@@ -14,6 +17,9 @@ public class PauseMenu : MonoBehaviour
         IsGamePaused = false;
     }
 
+    /// <summary>
+    /// Method for quitting the game.
+    /// </summary>
     public void QuitGame()
     {
         pauseMenuUI.SetActive(false);
@@ -38,6 +44,9 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method that pauses the game.
+    /// </summary>
     private void Pause()
     {
         pauseMenuUI.SetActive(true);

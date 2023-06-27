@@ -1,5 +1,7 @@
 using UnityEngine;
-
+/// <summary>
+/// Structure that represents a minesweeper cell
+/// </summary>
 public struct Cell
 {
     public enum Type
